@@ -47,6 +47,7 @@
         .mobile-nav-button.active {
             background-color: #e0e7ff;
             color: #3c366b;
+            font-weight: 600;
         }
         .content-section {
             display: none;
@@ -137,6 +138,16 @@
             background-color: transparent;
             color: #4b5563;
         }
+        /* Bottom Sheet Styles */
+        #mobile-nav-container.hidden {
+            display: none;
+        }
+        #mobile-nav-overlay {
+            transition: opacity 0.3s ease-in-out;
+        }
+        #mobile-nav-sheet {
+            transition: transform 0.3s ease-in-out;
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -171,16 +182,19 @@
             </div>
         </nav>
         
-        <div id="mobile-nav" class="hidden md:hidden fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-40">
-            <div class="bg-white w-64 h-full shadow-lg p-4">
-                <button id="close-menu-btn" class="float-right p-2 text-gray-500">&times;</button>
-                <h3 class="text-lg font-bold mb-4" data-translate-key="nav_menu_title">菜单</h3>
+        <div id="mobile-nav-container" class="hidden md:hidden fixed inset-0 z-40">
+            <!-- Overlay -->
+            <div id="mobile-nav-overlay" class="fixed inset-0 bg-black bg-opacity-50 opacity-0"></div>
+            <!-- Bottom Sheet -->
+            <div id="mobile-nav-sheet" class="fixed bottom-0 left-0 right-0 bg-white rounded-t-2xl shadow-lg p-4 transform translate-y-full">
+                <div class="mx-auto w-12 h-1.5 bg-gray-300 rounded-full mb-4"></div>
+                <h3 class="text-lg font-bold mb-4 text-center" data-translate-key="nav_menu_title">菜单</h3>
                 <div class="flex flex-col space-y-2">
-                    <button class="mobile-nav-button active w-full text-left p-2 rounded" onclick="switchTab('overview'); closeMenu();" data-translate-key="nav_overview">项目概览</button>
-                    <button class="mobile-nav-button w-full text-left p-2 rounded" onclick="switchTab('components'); closeMenu();" data-translate-key="nav_components">核心部件选型</button>
-                    <button class="mobile-nav-button w-full text-left p-2 rounded" onclick="switchTab('cost'); closeMenu();" data-translate-key="nav_cost">成本与BOM分析</button>
-                    <button class="mobile-nav-button w-full text-left p-2 rounded" onclick="switchTab('simulation'); closeMenu();" data-translate-key="nav_simulation">控制与仿真</button>
-                    <button class="mobile-nav-button w-full text-left p-2 rounded" onclick="switchTab('summary'); closeMenu();" data-translate-key="nav_summary">技术要点</button>
+                    <button class="mobile-nav-button active w-full text-left p-3 rounded-lg text-lg" onclick="switchTab('overview'); closeMenu();" data-translate-key="nav_overview">项目概览</button>
+                    <button class="mobile-nav-button w-full text-left p-3 rounded-lg text-lg" onclick="switchTab('components'); closeMenu();" data-translate-key="nav_components">核心部件选型</button>
+                    <button class="mobile-nav-button w-full text-left p-3 rounded-lg text-lg" onclick="switchTab('cost'); closeMenu();" data-translate-key="nav_cost">成本与BOM分析</button>
+                    <button class="mobile-nav-button w-full text-left p-3 rounded-lg text-lg" onclick="switchTab('simulation'); closeMenu();" data-translate-key="nav_simulation">控制与仿真</button>
+                    <button class="mobile-nav-button w-full text-left p-3 rounded-lg text-lg" onclick="switchTab('summary'); closeMenu();" data-translate-key="nav_summary">技术要点</button>
                 </div>
             </div>
         </div>
@@ -568,9 +582,32 @@
         const costBtn = document.getElementById('cost-btn');
         const langZhBtn = document.getElementById('lang-zh');
         const langEnBtn = document.getElementById('lang-en');
+        
         const menuBtn = document.getElementById('menu-btn');
-        const closeMenuBtn = document.getElementById('close-menu-btn');
-        const mobileNav = document.getElementById('mobile-nav');
+        const mobileNavContainer = document.getElementById('mobile-nav-container');
+        const mobileNavOverlay = document.getElementById('mobile-nav-overlay');
+        const mobileNavSheet = document.getElementById('mobile-nav-sheet');
+
+        function openMenu() {
+            mobileNavContainer.classList.remove('hidden');
+            // Use requestAnimationFrame to ensure the styles are applied after 'display' changes
+            requestAnimationFrame(() => {
+                mobileNavOverlay.classList.remove('opacity-0');
+                mobileNavSheet.classList.remove('translate-y-full');
+            });
+        }
+
+        function closeMenu() {
+            mobileNavOverlay.classList.add('opacity-0');
+            mobileNavSheet.classList.add('translate-y-full');
+            // Wait for the transition to finish before hiding the container
+            setTimeout(() => {
+                mobileNavContainer.classList.add('hidden');
+            }, 300); // Must match transition duration
+        }
+
+        menuBtn.addEventListener('click', openMenu);
+        mobileNavOverlay.addEventListener('click', closeMenu);
 
         function switchTab(tabId) {
             const allNavButtons = [...navButtons, ...mobileNavButtons];
@@ -587,21 +624,6 @@
                 }
             });
         }
-        
-        function closeMenu() {
-            mobileNav.classList.add('hidden');
-        }
-
-        menuBtn.addEventListener('click', () => {
-            mobileNav.classList.remove('hidden');
-        });
-
-        closeMenuBtn.addEventListener('click', closeMenu);
-        mobileNav.addEventListener('click', (e) => {
-            if (e.target === mobileNav) {
-                closeMenu();
-            }
-        });
         
         function switchComponentView(viewType) {
             componentDetails.forEach(detail => {
