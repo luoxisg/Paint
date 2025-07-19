@@ -8,7 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <!-- Chosen Palette: Warm Neutral & Deep Indigo -->
     <!-- Application Structure Plan: The application is structured into five distinct, navigable sections (Overview, Components, Cost Analysis, Control Simulation, Summary) using a top navigation bar. This tabbed approach transforms the linear document into a multi-faceted, user-driven tool. It allows users to directly access the information most relevant to them—be it high-level concepts, detailed component trade-offs, budget implications, or operational simulation. This non-linear structure is superior for usability as it caters to different user goals (e.g., an engineer comparing specs vs. a manager assessing costs) without forcing a sequential read-through. -->
     <!-- Visualization & Content Choices: 
@@ -25,6 +25,9 @@
             font-family: 'Noto Sans SC', sans-serif;
             background-color: #f8f7f4; /* Warm Neutral */
             color: #333;
+        }
+        body.en {
+            font-family: 'Roboto', sans-serif;
         }
         .nav-button {
             transition: all 0.3s ease;
@@ -105,70 +108,91 @@
             background-color: #e5e7eb;
             color: #374151;
         }
+        .lang-switch-btn {
+            padding: 0.25rem 0.75rem;
+            font-size: 0.875rem;
+            font-weight: 700;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+        .lang-switch-btn.active {
+            background-color: #3c366b;
+            color: white;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+        }
+        .lang-switch-btn.inactive {
+            background-color: transparent;
+            color: #4b5563;
+        }
     </style>
 </head>
 <body class="antialiased">
 
     <div class="container mx-auto px-4 py-8">
 
-        <header class="text-center mb-8">
-            <h1 class="text-4xl font-bold text-gray-800">三轴喷绘设备博士级选型报告</h1>
-            <p class="mt-2 text-lg text-gray-600">一份交互式、数据驱动的决策支持工具</p>
+        <header class="relative text-center mb-8">
+            <h1 class="text-4xl font-bold text-gray-800" data-translate-key="header_title">三轴喷绘设备选型报告</h1>
+            <p class="mt-2 text-lg text-gray-600" data-translate-key="header_subtitle">一份交互式、数据驱动的决策支持工具</p>
+            <div class="absolute top-0 right-0 bg-gray-200 rounded-lg p-1 flex items-center">
+                <button id="lang-zh" class="lang-switch-btn active" onclick="setLanguage('zh-CN')">中文</button>
+                <button id="lang-en" class="lang-switch-btn inactive" onclick="setLanguage('en-US')">EN</button>
+            </div>
         </header>
 
         <nav class="sticky top-0 bg-f8f7f4/80 backdrop-blur-sm z-10 mb-8 border-b border-gray-200">
             <div class="flex justify-center space-x-4 sm:space-x-8">
-                <button class="nav-button active py-4 px-2 text-sm sm:text-base font-medium text-gray-700" onclick="switchTab('overview')">项目概览</button>
-                <button class="nav-button py-4 px-2 text-sm sm:text-base font-medium text-gray-700" onclick="switchTab('components')">核心部件选型</button>
-                <button class="nav-button py-4 px-2 text-sm sm:text-base font-medium text-gray-700" onclick="switchTab('cost')">成本与BOM分析</button>
-                <button class="nav-button py-4 px-2 text-sm sm:text-base font-medium text-gray-700" onclick="switchTab('simulation')">控制与仿真</button>
-                <button class="nav-button py-4 px-2 text-sm sm:text-base font-medium text-gray-700" onclick="switchTab('summary')">技术要点</button>
+                <button class="nav-button active py-4 px-2 text-sm sm:text-base font-medium text-gray-700" onclick="switchTab('overview')" data-translate-key="nav_overview">项目概览</button>
+                <button class="nav-button py-4 px-2 text-sm sm:text-base font-medium text-gray-700" onclick="switchTab('components')" data-translate-key="nav_components">核心部件选型</button>
+                <button class="nav-button py-4 px-2 text-sm sm:text-base font-medium text-gray-700" onclick="switchTab('cost')" data-translate-key="nav_cost">成本与BOM分析</button>
+                <button class="nav-button py-4 px-2 text-sm sm:text-base font-medium text-gray-700" onclick="switchTab('simulation')" data-translate-key="nav_simulation">控制与仿真</button>
+                <button class="nav-button py-4 px-2 text-sm sm:text-base font-medium text-gray-700" onclick="switchTab('summary')" data-translate-key="nav_summary">技术要点</button>
             </div>
         </nav>
 
         <main>
             <div id="overview" class="content-section active">
                 <div class="bg-white p-6 sm:p-8 rounded-xl shadow-md">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4">1. 项目背景与目标</h2>
-                    <p class="text-gray-700 leading-relaxed mb-6">本报告旨在为高精度三轴喷绘设备提供一套完整的核心部件选型标准与分析框架。该设备旨在满足在皮革、板材、纸张等多种平面介质上的自动化、高精度图形喷绘需求。系统需具备处理DXF等标准工业文件格式的能力，并保证卓越的运行稳定性与重复定位精度。通过本交互式报告，工程师与决策者可以深入理解各部件的技术权衡，并根据具体应用场景（如工业生产、包装装饰或实验室研发）做出最优化的选型决策。</p>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4" data-translate-key="overview_title1">1. 项目背景与目标</h2>
+                    <p class="text-gray-700 leading-relaxed mb-6" data-translate-key="overview_p1">本报告旨在为高精度三轴喷绘设备提供一套完整的核心部件选型标准与分析框架。该设备旨在满足在皮革、板材、纸张等多种平面介质上的自动化、高精度图形喷绘需求。系统需具备处理DXF等标准工业文件格式的能力，并保证卓越的运行稳定性与重复定位精度。通过本交互式报告，工程师与决策者可以深入理解各部件的技术权衡，并根据具体应用场景（如工业生产、包装装饰或实验室研发）做出最优化的选型决策。</p>
 
-                    <h2 class="text-2xl font-bold text-gray-800 mb-6">2. 系统组成模块</h2>
-                     <p class="text-gray-700 leading-relaxed mb-6">三轴喷绘系统是一个集成了机械、电气和软件的精密系统。其核心由六大模块构成，各模块协同工作，将数字设计稿精确转化为物理世界的喷绘图案。下方图示清晰地展示了这些模块及其在系统中的功能定位。将鼠标悬停在任一模块上，可以查看其详细功能描述，帮助您快速建立对系统整体架构的理解。</p>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6" data-translate-key="overview_title2">2. 系统组成模块</h2>
+                     <p class="text-gray-700 leading-relaxed mb-6" data-translate-key="overview_p2">三轴喷绘系统是一个集成了机械、电气和软件的精密系统。其核心由六大模块构成，各模块协同工作，将数字设计稿精确转化为物理世界的喷绘图案。下方图示清晰地展示了这些模块及其在系统中的功能定位。将鼠标悬停在任一模块上，可以查看其详细功能描述，帮助您快速建立对系统整体架构的理解。</p>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
                         <div class="group relative p-6 bg-indigo-50 rounded-lg border border-indigo-200">
-                            <h3 class="font-semibold text-indigo-800">X/Y/Z轴运动模组</h3>
+                            <h3 class="font-semibold text-indigo-800" data-translate-key="module_axis_title">X/Y/Z轴运动模组</h3>
                             <div class="absolute inset-0 bg-indigo-100 rounded-lg p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                                <p class="text-sm text-indigo-900">系统的“骨骼”，负责承载喷头在三维空间内按预定轨迹进行精确移动，是实现图案绘制的基础。</p>
+                                <p class="text-sm text-indigo-900" data-translate-key="module_axis_desc">系统的“骨骼”，负责承载喷头在三维空间内按预定轨迹进行精确移动，是实现图案绘制的基础。</p>
                             </div>
                         </div>
                         <div class="group relative p-6 bg-indigo-50 rounded-lg border border-indigo-200">
-                            <h3 class="font-semibold text-indigo-800">伺服/步进驱动系统</h3>
+                            <h3 class="font-semibold text-indigo-800" data-translate-key="module_drive_title">伺服/步进驱动系统</h3>
                             <div class="absolute inset-0 bg-indigo-100 rounded-lg p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                                <p class="text-sm text-indigo-900">系统的“肌肉”，为XYZ三轴提供动力，并根据控制器的指令精确控制运动的速度、方向和距离。</p>
+                                <p class="text-sm text-indigo-900" data-translate-key="module_drive_desc">系统的“肌肉”，为XYZ三轴提供动力，并根据控制器的指令精确控制运动的速度、方向和距离。</p>
                             </div>
                         </div>
                         <div class="group relative p-6 bg-indigo-50 rounded-lg border border-indigo-200">
-                            <h3 class="font-semibold text-indigo-800">控制器 (主控)</h3>
+                            <h3 class="font-semibold text-indigo-800" data-translate-key="module_controller_title">控制器 (主控)</h3>
                              <div class="absolute inset-0 bg-indigo-100 rounded-lg p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                                <p class="text-sm text-indigo-900">系统的“大脑”，负责接收和解析DXF等设计文件，生成运动路径（G-code），并协调所有轴和喷阀的动作。</p>
+                                <p class="text-sm text-indigo-900" data-translate-key="module_controller_desc">系统的“大脑”，负责接收和解析DXF等设计文件，生成运动路径（G-code），并协调所有轴和喷阀的动作。</p>
                             </div>
                         </div>
                         <div class="group relative p-6 bg-indigo-50 rounded-lg border border-indigo-200">
-                            <h3 class="font-semibold text-indigo-800">喷阀执行机构</h3>
+                            <h3 class="font-semibold text-indigo-800" data-translate-key="module_valve_title">喷阀执行机构</h3>
                              <div class="absolute inset-0 bg-indigo-100 rounded-lg p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                                <p class="text-sm text-indigo-900">系统的“画笔”，在接收到控制器信号后，以极高的速度和精度执行喷射或关闭动作，控制墨水或涂料的释放。</p>
+                                <p class="text-sm text-indigo-900" data-translate-key="module_valve_desc">系统的“画笔”，在接收到控制器信号后，以极高的速度和精度执行喷射或关闭动作，控制墨水或涂料的释放。</p>
                             </div>
                         </div>
                         <div class="group relative p-6 bg-indigo-50 rounded-lg border border-indigo-200">
-                            <h3 class="font-semibold text-indigo-800">软件与接口</h3>
+                            <h3 class="font-semibold text-indigo-800" data-translate-key="module_software_title">软件与接口</h3>
                             <div class="absolute inset-0 bg-indigo-100 rounded-lg p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                                <p class="text-sm text-indigo-900">系统的“人机界面”，允许用户导入设计文件，设置喷绘参数，并监控设备状态，是连接用户与机器的桥梁。</p>
+                                <p class="text-sm text-indigo-900" data-translate-key="module_software_desc">系统的“人机界面”，允许用户导入设计文件，设置喷绘参数，并监控设备状态，是连接用户与机器的桥梁。</p>
                             </div>
                         </div>
                         <div class="group relative p-6 bg-indigo-50 rounded-lg border border-indigo-200">
-                            <h3 class="font-semibold text-indigo-800">平台与结构件</h3>
+                            <h3 class="font-semibold text-indigo-800" data-translate-key="module_platform_title">平台与结构件</h3>
                             <div class="absolute inset-0 bg-indigo-100 rounded-lg p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                                <p class="text-sm text-indigo-900">系统的“基石”，提供一个稳固、平整的安装基础和工作平台，确保所有运动部件的相对位置精度和长期稳定性。</p>
+                                <p class="text-sm text-indigo-900" data-translate-key="module_platform_desc">系统的“基石”，提供一个稳固、平整的安装基础和工作平台，确保所有运动部件的相对位置精度和长期稳定性。</p>
                             </div>
                         </div>
                     </div>
@@ -177,22 +201,22 @@
 
             <div id="components" class="content-section">
                 <div class="bg-white p-6 sm:p-8 rounded-xl shadow-md">
-                     <h2 class="text-2xl font-bold text-gray-800 mb-4">核心部件选型标准与权衡</h2>
-                     <p class="text-gray-700 leading-relaxed mb-6">任何工程决策都是在性能、成本和可靠性之间寻求最佳平衡。本节将深入剖析四大核心部件的选型标准。您可以通过下方的“性能优先”与“成本优先”按钮，动态切换查看不同导向下的选型策略和品牌推荐。这有助于您理解不同选择对最终设备性能和预算的影响，从而做出更明智的决策。</p>
+                     <h2 class="text-2xl font-bold text-gray-800 mb-4" data-translate-key="components_title">核心部件选型标准与权衡</h2>
+                     <p class="text-gray-700 leading-relaxed mb-6" data-translate-key="components_p1">任何工程决策都是在性能、成本和可靠性之间寻求最佳平衡。本节将深入剖析四大核心部件的选型标准。您可以通过下方的“性能优先”与“成本优先”按钮，动态切换查看不同导向下的选型策略和品牌推荐。这有助于您理解不同选择对最终设备性能和预算的影响，从而做出更明智的决策。</p>
                      
                     <div class="flex justify-center mb-8">
                         <div class="bg-gray-200 rounded-full p-1 flex">
-                            <button id="perf-btn" class="pill-button active" onclick="switchComponentView('performance')">性能优先</button>
-                            <button id="cost-btn" class="pill-button inactive" onclick="switchComponentView('cost')">成本优先</button>
+                            <button id="perf-btn" class="pill-button active" onclick="switchComponentView('performance')" data-translate-key="btn_performance">性能优先</button>
+                            <button id="cost-btn" class="pill-button inactive" onclick="switchComponentView('cost')" data-translate-key="btn_cost">成本优先</button>
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                         <div class="card p-6">
-                            <h3 class="text-xl font-bold mb-4 text-indigo-800">1. X/Y/Z轴线性模组</h3>
+                            <h3 class="text-xl font-bold mb-4 text-indigo-800" data-translate-key="comp_axis_title">1. X/Y/Z轴线性模组</h3>
                             <div class="component-details" data-type="performance">
-                                <p class="font-semibold mb-2">策略：精度与速度至上</p>
-                                <ul class="list-disc list-inside space-y-2 text-gray-600">
+                                <p class="font-semibold mb-2" data-translate-key="comp_axis_perf_strategy">策略：精度与速度至上</p>
+                                <ul class="list-disc list-inside space-y-2 text-gray-600" data-translate-key="comp_axis_perf_list">
                                     <li><span class="font-medium text-gray-800">结构形式:</span> 优选<b class="text-indigo-600">滚珠丝杆</b>驱动，提供无与伦比的刚性和重复定位精度 (≤ ±0.02mm)。</li>
                                     <li><span class="font-medium text-gray-800">速度要求:</span> X/Y轴速度需达到或超过 300mm/s，以保证高效率。</li>
                                     <li><span class="font-medium text-gray-800">导轨等级:</span> 采用高精度等级的直线导轨（如HIWIN的HG/EG系列）。</li>
@@ -200,8 +224,8 @@
                                 </ul>
                             </div>
                             <div class="component-details hidden" data-type="cost">
-                                <p class="font-semibold mb-2">策略：经济性与可靠性平衡</p>
-                                <ul class="list-disc list-inside space-y-2 text-gray-600">
+                                <p class="font-semibold mb-2" data-translate-key="comp_axis_cost_strategy">策略：经济性与可靠性平衡</p>
+                                <ul class="list-disc list-inside space-y-2 text-gray-600" data-translate-key="comp_axis_cost_list">
                                     <li><span class="font-medium text-gray-800">结构形式:</span> 大行程（>1m）优选<b class="text-indigo-600">同步皮带</b>驱动，成本优势明显且速度快；小行程可选用经济型滚珠丝杆。</li>
                                     <li><span class="font-medium text-gray-800">速度要求:</span> 满足基本生产需求，X/Y轴速度可适当放宽至 200mm/s。</li>
                                     <li><span class="font-medium text-gray-800">导轨等级:</span> 采用标准或经济型直线导轨。</li>
@@ -211,10 +235,10 @@
                         </div>
 
                         <div class="card p-6">
-                            <h3 class="text-xl font-bold mb-4 text-indigo-800">2. 电机与驱动器</h3>
+                            <h3 class="text-xl font-bold mb-4 text-indigo-800" data-translate-key="comp_motor_title">2. 电机与驱动器</h3>
                              <div class="component-details" data-type="performance">
-                                <p class="font-semibold mb-2">策略：极致响应与零误差</p>
-                                <ul class="list-disc list-inside space-y-2 text-gray-600">
+                                <p class="font-semibold mb-2" data-translate-key="comp_motor_perf_strategy">策略：极致响应与零误差</p>
+                                <ul class="list-disc list-inside space-y-2 text-gray-600" data-translate-key="comp_motor_perf_list">
                                     <li><span class="font-medium text-gray-800">类型选择:</span> 必须选用<b class="text-indigo-600">伺服电机</b>系统，实现高动态响应和精确定位。</li>
                                     <li><span class="font-medium text-gray-800">控制方式:</span> 采用CANopen或EtherCAT总线控制，减少接线，提高抗干扰能力和响应速度。</li>
                                     <li><span class="font-medium text-gray-800">扭矩匹配:</span> 精确计算负载扭矩，并选择具备高峰值扭矩能力的伺服。</li>
@@ -222,8 +246,8 @@
                                 </ul>
                             </div>
                             <div class="component-details hidden" data-type="cost">
-                                <p class="font-semibold mb-2">策略：高性价比与防丢步</p>
-                                <ul class="list-disc list-inside space-y-2 text-gray-600">
+                                <p class="font-semibold mb-2" data-translate-key="comp_motor_cost_strategy">策略：高性价比与防丢步</p>
+                                <ul class="list-disc list-inside space-y-2 text-gray-600" data-translate-key="comp_motor_cost_list">
                                     <li><span class="font-medium text-gray-800">类型选择:</span> 优选<b class="text-indigo-600">闭环步进电机</b>，成本远低于伺服，但具备位置反馈，可有效防止丢步。</li>
                                     <li><span class="font-medium text-gray-800">控制方式:</span> 采用传统的“脉冲+方向”控制，简单可靠，兼容性好。</li>
                                     <li><span class="font-medium text-gray-800">扭矩匹配:</span> 在满足力矩需求前提下，选择合适的机身尺寸和减速比。</li>
@@ -233,10 +257,10 @@
                         </div>
 
                         <div class="card p-6">
-                            <h3 class="text-xl font-bold mb-4 text-indigo-800">3. 喷阀系统</h3>
+                            <h3 class="text-xl font-bold mb-4 text-indigo-800" data-translate-key="comp_valve_title">3. 喷阀系统</h3>
                              <div class="component-details" data-type="performance">
-                                <p class="font-semibold mb-2">策略：微秒级响应与超精细喷射</p>
-                                <ul class="list-disc list-inside space-y-2 text-gray-600">
+                                <p class="font-semibold mb-2" data-translate-key="comp_valve_perf_strategy">策略：微秒级响应与超精细喷射</p>
+                                <ul class="list-disc list-inside space-y-2 text-gray-600" data-translate-key="comp_valve_perf_list">
                                     <li><span class="font-medium text-gray-800">驱动方式:</span> 优选<b class="text-indigo-600">压电式喷阀</b>，响应速度可达微秒级，实现超高频率喷射。</li>
                                     <li><span class="font-medium text-gray-800">响应速度:</span> ≤ 2ms，确保高速飞行喷绘时线条的起始和结束干脆利落。</li>
                                     <li><span class="font-medium text-gray-800">喷嘴口径:</span> 可选微小口径 (0.1mm-0.2mm)，用于精细图案。</li>
@@ -244,8 +268,8 @@
                                 </ul>
                             </div>
                              <div class="component-details hidden" data-type="cost">
-                                <p class="font-semibold mb-2">策略：可靠耐用与快速开关</p>
-                                <ul class="list-disc list-inside space-y-2 text-gray-600">
+                                <p class="font-semibold mb-2" data-translate-key="comp_valve_cost_strategy">策略：可靠耐用与快速开关</p>
+                                <ul class="list-disc list-inside space-y-2 text-gray-600" data-translate-key="comp_valve_cost_list">
                                     <li><span class="font-medium text-gray-800">驱动方式:</span> 采用<b class="text-indigo-600">电磁阀</b>控制，技术成熟，成本低廉，维护简单。</li>
                                     <li><span class="font-medium text-gray-800">响应速度:</span> 满足 ≤ 10ms 即可应对大多数应用场景。</li>
                                     <li><span class="font-medium text-gray-800">喷嘴口径:</span> 选择常用口径 (0.2mm–0.5mm)，通用性好。</li>
@@ -255,10 +279,10 @@
                         </div>
 
                         <div class="card p-6">
-                            <h3 class="text-xl font-bold mb-4 text-indigo-800">4. 主控与路径生成</h3>
+                            <h3 class="text-xl font-bold mb-4 text-indigo-800" data-translate-key="comp_controller_title">4. 主控与路径生成</h3>
                              <div class="component-details" data-type="performance">
-                                <p class="font-semibold mb-2">策略：强大算力与高扩展性</p>
-                                <ul class="list-disc list-inside space-y-2 text-gray-600">
+                                <p class="font-semibold mb-2" data-translate-key="comp_controller_perf_strategy">策略：强大算力与高扩展性</p>
+                                <ul class="list-disc list-inside space-y-2 text-gray-600" data-translate-key="comp_controller_perf_list">
                                     <li><span class="font-medium text-gray-800">推荐平台:</span> 采用基于PC的工控机平台，如 <b class="text-indigo-600">Beckhoff (TwinCAT)</b>，或专业的运动控制器。</li>
                                     <li><span class="font-medium text-gray-800">运动控制:</span> 支持多轴高速插补、前瞻预处理等高级功能。</li>
                                     <li><span class="font-medium text-gray-800">扩展能力:</span> 预留EtherCAT等总线接口，便于集成视觉、多喷阀等高级模块。</li>
@@ -266,8 +290,8 @@
                                 </ul>
                             </div>
                              <div class="component-details hidden" data-type="cost">
-                                <p class="font-semibold mb-2">策略：开源、够用与社区支持</p>
-                                <ul class="list-disc list-inside space-y-2 text-gray-600">
+                                <p class="font-semibold mb-2" data-translate-key="comp_controller_cost_strategy">策略：开源、够用与社区支持</p>
+                                <ul class="list-disc list-inside space-y-2 text-gray-600" data-translate-key="comp_controller_cost_list">
                                     <li><span class="font-medium text-gray-800">推荐平台:</span> 采用开源解决方案，如<b class="text-indigo-600">Arduino + GRBL</b>，或集成度更高的<b class="text-indigo-600">Openbuilds BlackBox</b>。</li>
                                     <li><span class="font-medium text-gray-800">软件兼容:</span> 社区有大量免费上位机软件支持DXF导入和G-code生成。</li>
                                     <li><span class="font-medium text-gray-800">扩展能力:</span> 基本的IO口可用于简单的扩展，但复杂功能需自行开发。</li>
@@ -281,25 +305,25 @@
 
             <div id="cost" class="content-section">
                  <div class="bg-white p-6 sm:p-8 rounded-xl shadow-md">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4">成本构成与实验设备BOM清单</h2>
-                    <p class="text-gray-700 leading-relaxed mb-6">成本是项目成功与否的关键因素。下图直观地比较了两种不同定位（“成本领先的实验测试设备”与“高性能工业生产设备”）的相对成本构成。可以看出，驱动系统（伺服 vs 步进）和运动模组是主要的成本差异来源。理解这些差异有助于您在项目初期进行合理的预算规划。图表下方提供了一份针对1.8m x 2.0m运动范围的成本领先型实验测试设备的详细BOM清单，可作为您搭建原型机的参考。</p>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4" data-translate-key="cost_title">成本构成与实验设备BOM清单</h2>
+                    <p class="text-gray-700 leading-relaxed mb-6" data-translate-key="cost_p1">成本是项目成功与否的关键因素。下图直观地比较了两种不同定位（“成本领先的实验测试设备”与“高性能工业生产设备”）的相对成本构成。可以看出，驱动系统（伺服 vs 步进）和运动模组是主要的成本差异来源。理解这些差异有助于您在项目初期进行合理的预算规划。图表下方提供了一份针对1.8m x 2.0m运动范围的成本领先型实验测试设备的详细BOM清单，可作为您搭建原型机的参考。</p>
                     
                     <div class="chart-container mb-12">
                         <canvas id="costChart"></canvas>
                     </div>
 
-                    <h3 class="text-xl font-bold text-gray-800 mb-4">成本领先的实验测试设备BOM清单 (1.8m x 2.0m)</h3>
+                    <h3 class="text-xl font-bold text-gray-800 mb-4" data-translate-key="cost_bom_title">成本领先的实验测试设备BOM清单 (1.8m x 2.0m)</h3>
                     <div class="overflow-x-auto">
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                                 <tr>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">部件类别</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">选型建议</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">规格/型号</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">备注</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-translate-key="bom_th1">部件类别</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-translate-key="bom_th2">选型建议</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-translate-key="bom_th3">规格/型号</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-translate-key="bom_th4">备注</th>
                                 </tr>
                             </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
+                            <tbody class="bg-white divide-y divide-gray-200" data-translate-key="bom_tbody">
                                 <tr>
                                     <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">框架结构</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-gray-700">欧标铝型材</td>
@@ -350,27 +374,27 @@
             
             <div id="simulation" class="content-section">
                 <div class="bg-white p-6 sm:p-8 rounded-xl shadow-md">
-                     <h2 class="text-2xl font-bold text-gray-800 mb-4">控制界面与路径仿真</h2>
-                    <p class="text-gray-700 leading-relaxed mb-6">理论最终需要落地为实践。本节提供了一个简化的控制界面仿真器，以帮助您直观地理解设备的工作流程。您可以点击“加载DXF文件”按钮来模拟导入一个设计图纸（此处为预设示例），随后在下方的画布中将看到系统解析出的运动轨迹。这虽然是一个概念演示，但清晰地展示了从数字文件到物理运动的核心转换过程，这也是您所选控制器需要实现的关键功能。</p>
+                     <h2 class="text-2xl font-bold text-gray-800 mb-4" data-translate-key="sim_title">控制界面与路径仿真</h2>
+                    <p class="text-gray-700 leading-relaxed mb-6" data-translate-key="sim_p1">理论最终需要落地为实践。本节提供了一个简化的控制界面仿真器，以帮助您直观地理解设备的工作流程。您可以点击“加载DXF文件”按钮来模拟导入一个设计图纸（此处为预设示例），随后在下方的画布中将看到系统解析出的运动轨迹。这虽然是一个概念演示，但清晰地展示了从数字文件到物理运动的核心转换过程，这也是您所选控制器需要实现的关键功能。</p>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div class="md:col-span-1 space-y-4">
-                            <h3 class="text-lg font-semibold">控制面板</h3>
+                            <h3 class="text-lg font-semibold" data-translate-key="sim_panel_title">控制面板</h3>
                             <div>
                                 <label for="dxf-upload" class="btn w-full text-center">
-                                    <span>📤 加载DXF文件</span>
+                                    <span data-translate-key="sim_btn_load">📤 加载DXF文件</span>
                                     <input type="file" id="dxf-upload" class="hidden" accept=".dxf">
                                 </label>
                             </div>
-                            <button class="btn w-full">▶️ 开始任务</button>
-                            <button class="btn btn-secondary w-full">⏹️ 停止任务</button>
-                            <button id="clear-canvas-btn" class="btn btn-secondary w-full">🔄 清除轨迹</button>
+                            <button class="btn w-full"><span data-translate-key="sim_btn_start">▶️ 开始任务</span></button>
+                            <button class="btn btn-secondary w-full"><span data-translate-key="sim_btn_stop">⏹️ 停止任务</span></button>
+                            <button id="clear-canvas-btn" class="btn btn-secondary w-full"><span data-translate-key="sim_btn_clear">🔄 清除轨迹</span></button>
                             <div class="text-sm text-gray-500 mt-4 p-4 bg-gray-50 rounded-lg">
-                                <p><b class="text-gray-700">状态: </b> <span id="sim-status">等待加载文件...</span></p>
-                                <p><b class="text-gray-700">文件名: </b> <span id="sim-filename">N/A</span></p>
+                                <p><b class="text-gray-700" data-translate-key="sim_status_label">状态: </b> <span id="sim-status" data-translate-key="sim_status_text">等待加载文件...</span></p>
+                                <p><b class="text-gray-700" data-translate-key="sim_filename_label">文件名: </b> <span id="sim-filename">N/A</span></p>
                             </div>
                         </div>
                         <div class="md:col-span-2">
-                             <h3 class="text-lg font-semibold mb-4">路径预览 (1.8m x 2.0m 工作区)</h3>
+                             <h3 class="text-lg font-semibold mb-4" data-translate-key="sim_preview_title">路径预览 (1.8m x 2.0m 工作区)</h3>
                             <div class="aspect-w-10 aspect-h-9">
                                 <canvas id="simulation-canvas" class="control-panel-canvas rounded-lg"></canvas>
                             </div>
@@ -381,13 +405,13 @@
 
             <div id="summary" class="content-section">
                 <div class="bg-white p-6 sm:p-8 rounded-xl shadow-md">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4">技术要点总结与可选功能拓展</h2>
-                    <p class="text-gray-700 leading-relaxed mb-6">为了确保最终设备达到预期的性能标准，以下核心技术指标是选型过程中必须严格遵守的底线。这些指标共同决定了喷绘的精度、清晰度和效率。同时，我们也列出了一些极具价值的可选功能拓展方向。在初期设计时预留相应的软硬件接口，将为设备未来的升级和功能增强提供极大的灵活性，有效延长设备的技术生命周期并提升市场竞争力。</p>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4" data-translate-key="summary_title">技术要点总结与可选功能拓展</h2>
+                    <p class="text-gray-700 leading-relaxed mb-6" data-translate-key="summary_p1">为了确保最终设备达到预期的性能标准，以下核心技术指标是选型过程中必须严格遵守的底线。这些指标共同决定了喷绘的精度、清晰度和效率。同时，我们也列出了一些极具价值的可选功能拓展方向。在初期设计时预留相应的软硬件接口，将为设备未来的升级和功能增强提供极大的灵活性，有效延长设备的技术生命周期并提升市场竞争力。</p>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div>
-                            <h3 class="text-xl font-bold text-gray-800 mb-4">关键性能指标 (总结表)</h3>
-                            <div class="space-y-3">
+                            <h3 class="text-xl font-bold text-gray-800 mb-4" data-translate-key="summary_table_title">关键性能指标 (总结表)</h3>
+                            <div class="space-y-3" data-translate-key="summary_table_content">
                                 <div class="flex justify-between p-3 bg-gray-50 rounded-lg">
                                     <span class="font-medium text-gray-700">重复定位精度</span>
                                     <span class="font-bold text-indigo-600">≤ ±0.02mm</span>
@@ -416,8 +440,8 @@
                         </div>
 
                         <div>
-                            <h3 class="text-xl font-bold text-gray-800 mb-4">可选功能拓展 (建议预留)</h3>
-                            <ul class="space-y-3 list-none">
+                            <h3 class="text-xl font-bold text-gray-800 mb-4" data-translate-key="summary_expansion_title">可选功能拓展 (建议预留)</h3>
+                            <ul class="space-y-3 list-none" data-translate-key="summary_expansion_list">
                                 <li class="flex items-center p-3 bg-green-50 rounded-lg text-green-800">
                                     <span class="text-lg mr-3">👁️</span>
                                     <div>
@@ -455,11 +479,183 @@
     </div>
 
     <script>
+        const translations = {
+            'zh-CN': {
+                page_title: '三轴喷绘设备博士级选型报告',
+                header_title: '三轴喷绘设备博士级选型报告',
+                header_subtitle: '一份交互式、数据驱动的决策支持工具',
+                nav_overview: '项目概览',
+                nav_components: '核心部件选型',
+                nav_cost: '成本与BOM分析',
+                nav_simulation: '控制与仿真',
+                nav_summary: '技术要点',
+                overview_title1: '1. 项目背景与目标',
+                overview_p1: '本报告旨在为高精度三轴喷绘设备提供一套完整的核心部件选型标准与分析框架。该设备旨在满足在皮革、板材、纸张等多种平面介质上的自动化、高精度图形喷绘需求。系统需具备处理DXF等标准工业文件格式的能力，并保证卓越的运行稳定性与重复定位精度。通过本交互式报告，工程师与决策者可以深入理解各部件的技术权衡，并根据具体应用场景（如工业生产、包装装饰或实验室研发）做出最优化的选型决策。',
+                overview_title2: '2. 系统组成模块',
+                overview_p2: '三轴喷绘系统是一个集成了机械、电气和软件的精密系统。其核心由六大模块构成，各模块协同工作，将数字设计稿精确转化为物理世界的喷绘图案。下方图示清晰地展示了这些模块及其在系统中的功能定位。将鼠标悬停在任一模块上，可以查看其详细功能描述，帮助您快速建立对系统整体架构的理解。',
+                module_axis_title: 'X/Y/Z轴运动模组',
+                module_axis_desc: '系统的“骨骼”，负责承载喷头在三维空间内按预定轨迹进行精确移动，是实现图案绘制的基础。',
+                module_drive_title: '伺服/步进驱动系统',
+                module_drive_desc: '系统的“肌肉”，为XYZ三轴提供动力，并根据控制器的指令精确控制运动的速度、方向和距离。',
+                module_controller_title: '控制器 (主控)',
+                module_controller_desc: '系统的“大脑”，负责接收和解析DXF等设计文件，生成运动路径（G-code），并协调所有轴和喷阀的动作。',
+                module_valve_title: '喷阀执行机构',
+                module_valve_desc: '系统的“画笔”，在接收到控制器信号后，以极高的速度和精度执行喷射或关闭动作，控制墨水或涂料的释放。',
+                module_software_title: '软件与接口',
+                module_software_desc: '系统的“人机界面”，允许用户导入设计文件，设置喷绘参数，并监控设备状态，是连接用户与机器的桥梁。',
+                module_platform_title: '平台与结构件',
+                module_platform_desc: '系统的“基石”，提供一个稳固、平整的安装基础和工作平台，确保所有运动部件的相对位置精度和长期稳定性。',
+                components_title: '核心部件选型标准与权衡',
+                components_p1: '任何工程决策都是在性能、成本和可靠性之间寻求最佳平衡。本节将深入剖析四大核心部件的选型标准。您可以通过下方的“性能优先”与“成本优先”按钮，动态切换查看不同导向下的选型策略和品牌推荐。这有助于您理解不同选择对最终设备性能和预算的影响，从而做出更明智的决策。',
+                btn_performance: '性能优先',
+                btn_cost: '成本优先',
+                comp_axis_title: '1. X/Y/Z轴线性模组',
+                comp_axis_perf_strategy: '策略：精度与速度至上',
+                comp_axis_perf_list_html: `<li><span class="font-medium text-gray-800">结构形式:</span> 优选<b class="text-indigo-600">滚珠丝杆</b>驱动，提供无与伦比的刚性和重复定位精度 (≤ ±0.02mm)。</li><li><span class="font-medium text-gray-800">速度要求:</span> X/Y轴速度需达到或超过 300mm/s，以保证高效率。</li><li><span class="font-medium text-gray-800">导轨等级:</span> 采用高精度等级的直线导轨（如HIWIN的HG/EG系列）。</li><li><span class="font-medium text-gray-800">推荐品牌:</span> THK, HIWIN (高端系列), Panasonic</li>`,
+                comp_axis_cost_strategy: '策略：经济性与可靠性平衡',
+                comp_axis_cost_list_html: `<li><span class="font-medium text-gray-800">结构形式:</span> 大行程（>1m）优选<b class="text-indigo-600">同步皮带</b>驱动，成本优势明显且速度快；小行程可选用经济型滚珠丝杆。</li><li><span class="font-medium text-gray-800">速度要求:</span> 满足基本生产需求，X/Y轴速度可适当放宽至 200mm/s。</li><li><span class="font-medium text-gray-800">导轨等级:</span> 采用标准或经济型直线导轨。</li><li><span class="font-medium text-gray-800">推荐品牌:</span> 国产知名品牌, SMC, AMT</li>`,
+                comp_motor_title: '2. 电机与驱动器',
+                comp_motor_perf_strategy: '策略：极致响应与零误差',
+                comp_motor_perf_list_html: `<li><span class="font-medium text-gray-800">类型选择:</span> 必须选用<b class="text-indigo-600">伺服电机</b>系统，实现高动态响应和精确定位。</li><li><span class="font-medium text-gray-800">控制方式:</span> 采用CANopen或EtherCAT总线控制，减少接线，提高抗干扰能力和响应速度。</li><li><span class="font-medium text-gray-800">扭矩匹配:</span> 精确计算负载扭矩，并选择具备高峰值扭矩能力的伺服。</li><li><span class="font-medium text-gray-800">推荐品牌:</span> Yaskawa, Panasonic, Delta (高端系列)</li>`,
+                comp_motor_cost_strategy: '策略：高性价比与防丢步',
+                comp_motor_cost_list_html: `<li><span class="font-medium text-gray-800">类型选择:</span> 优选<b class="text-indigo-600">闭环步进电机</b>，成本远低于伺服，但具备位置反馈，可有效防止丢步。</li><li><span class="font-medium text-gray-800">控制方式:</span> 采用传统的“脉冲+方向”控制，简单可靠，兼容性好。</li><li><span class="font-medium text-gray-800">扭矩匹配:</span> 在满足力矩需求前提下，选择合适的机身尺寸和减速比。</li><li><span class="font-medium text-gray-800">推荐品牌:</span> Leadshine, Oriental Motor, MOONS'</li>`,
+                comp_valve_title: '3. 喷阀系统',
+                comp_valve_perf_strategy: '策略：微秒级响应与超精细喷射',
+                comp_valve_perf_list_html: `<li><span class="font-medium text-gray-800">驱动方式:</span> 优选<b class="text-indigo-600">压电式喷阀</b>，响应速度可达微秒级，实现超高频率喷射。</li><li><span class="font-medium text-gray-800">响应速度:</span> ≤ 2ms，确保高速飞行喷绘时线条的起始和结束干脆利落。</li><li><span class="font-medium text-gray-800">喷嘴口径:</span> 可选微小口径 (0.1mm-0.2mm)，用于精细图案。</li><li><span class="font-medium text-gray-800">推荐品牌:</span> Nordson, Musashi</li>`,
+                comp_valve_cost_strategy: '策略：可靠耐用与快速开关',
+                comp_valve_cost_list_html: `<li><span class="font-medium text-gray-800">驱动方式:</span> 采用<b class="text-indigo-600">电磁阀</b>控制，技术成熟，成本低廉，维护简单。</li><li><span class="font-medium text-gray-800">响应速度:</span> 满足 ≤ 10ms 即可应对大多数应用场景。</li><li><span class="font-medium text-gray-800">喷嘴口径:</span> 选择常用口径 (0.2mm–0.5mm)，通用性好。</li><li><span class="font-medium text-gray-800">推荐品牌:</span> Techcon, Camalot, 国产可靠品牌</li>`,
+                comp_controller_title: '4. 主控与路径生成',
+                comp_controller_perf_strategy: '策略：强大算力与高扩展性',
+                comp_controller_perf_list_html: `<li><span class="font-medium text-gray-800">推荐平台:</span> 采用基于PC的工控机平台，如 <b class="text-indigo-600">Beckhoff (TwinCAT)</b>，或专业的运动控制器。</li><li><span class="font-medium text-gray-800">运动控制:</span> 支持多轴高速插补、前瞻预处理等高级功能。</li><li><span class="font-medium text-gray-800">扩展能力:</span> 预留EtherCAT等总线接口，便于集成视觉、多喷阀等高级模块。</li><li><span class="font-medium text-gray-800">推荐品牌:</span> Beckhoff, Syntec, Googoltech</li>`,
+                comp_controller_cost_strategy: '策略：开源、够用与社区支持',
+                comp_controller_cost_list_html: `<li><span class="font-medium text-gray-800">推荐平台:</span> 采用开源解决方案，如<b class="text-indigo-600">Arduino + GRBL</b>，或集成度更高的<b class="text-indigo-600">Openbuilds BlackBox</b>。</li><li><span class="font-medium text-gray-800">软件兼容:</span> 社区有大量免费上位机软件支持DXF导入和G-code生成。</li><li><span class="font-medium text-gray-800">扩展能力:</span> 基本的IO口可用于简单的扩展，但复杂功能需自行开发。</li><li><span class="font-medium text-gray-800">推荐平台:</span> Openbuilds, GRBL-based controllers</li>`,
+                cost_title: '成本构成与实验设备BOM清单',
+                cost_p1: '成本是项目成功与否的关键因素。下图直观地比较了两种不同定位（“成本领先的实验测试设备”与“高性能工业生产设备”）的相对成本构成。可以看出，驱动系统（伺服 vs 步进）和运动模组是主要的成本差异来源。理解这些差异有助于您在项目初期进行合理的预算规划。图表下方提供了一份针对1.8m x 2.0m运动范围的成本领先型实验测试设备的详细BOM清单，可作为您搭建原型机的参考。',
+                cost_chart_title: '不同配置方案的相对成本构成分析',
+                cost_chart_dataset1_label: '成本领先 实验设备',
+                cost_chart_dataset2_label: '高性能 工业设备',
+                cost_chart_y_axis_label: '相对成本指数 (非具体金额)',
+                cost_bom_title: '成本领先的实验测试设备BOM清单 (1.8m x 2.0m)',
+                bom_th1: '部件类别',
+                bom_th2: '选型建议',
+                bom_th3: '规格/型号',
+                bom_th4: '备注',
+                bom_tbody_html: `<tr><td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">框架结构</td><td class="px-6 py-4 whitespace-nowrap text-gray-700">欧标铝型材</td><td class="px-6 py-4 whitespace-nowrap text-gray-700">4080重型 / 4040</td><td class="px-6 py-4 whitespace-nowrap text-gray-500">刚性好，易于搭建和扩展</td></tr><tr><td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">X/Y轴模组</td><td class="px-6 py-4 whitespace-nowrap text-gray-700">同步皮带 + 直线光轴/导轨</td><td class="px-6 py-4 whitespace-nowrap text-gray-700">GT2/HTD 3M皮带, SBR20光轴或MGN15导轨</td><td class="px-6 py-4 whitespace-nowrap text-gray-500">长行程下性价比最高的方案</td></tr><tr><td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Z轴模组</td><td class="px-6 py-4 whitespace-nowrap text-gray-700">T8丝杆模组</td><td class="px-6 py-4 whitespace-nowrap text-gray-700">行程100mm, 导程4mm</td><td class="px-6 py-4 whitespace-nowrap text-gray-500">具备自锁能力，防止喷头掉落</td></tr><tr><td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">电机驱动</td><td class="px-6 py-4 whitespace-nowrap text-gray-700">闭环步进电机套装</td><td class="px-6 py-4 whitespace-nowrap text-gray-700">NEMA 23 (X/Y轴), NEMA 17 (Z轴)</td><td class="px-6 py-4 whitespace-nowrap text-gray-500">成本与性能的最佳平衡点</td></tr><tr><td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">控制器</td><td class="px-6 py-4 whitespace-nowrap text-gray-700">集成式GRBL控制器</td><td class="px-6 py-4 whitespace-nowrap text-gray-700">Openbuilds BlackBox / MKS DLC32</td><td class="px-6 py-4 whitespace-nowrap text-gray-500">集成驱动，接线简单，社区成熟</td></tr><tr><td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">喷阀系统</td><td class="px-6 py-4 whitespace-nowrap text-gray-700">基础型电磁阀/喷笔</td><td class="px-6 py-4 whitespace-nowrap text-gray-700">12V/24V 电磁阀 + 继电器模块</td><td class="px-6 py-4 whitespace-nowrap text-gray-500">用于功能验证，成本极低</td></tr><tr><td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">电源</td><td class="px-6 py-4 whitespace-nowrap text-gray-700">开关电源</td><td class="px-6 py-4 whitespace-nowrap text-gray-700">24V 350W</td><td class="px-6 py-4 whitespace-nowrap text-gray-500">为所有电机和控制器供电</td></tr>`,
+                sim_title: '控制界面与路径仿真',
+                sim_p1: '理论最终需要落地为实践。本节提供了一个简化的控制界面仿真器，以帮助您直观地理解设备的工作流程。您可以点击“加载DXF文件”按钮来模拟导入一个设计图纸（此处为预设示例），随后在下方的画布中将看到系统解析出的运动轨迹。这虽然是一个概念演示，但清晰地展示了从数字文件到物理运动的核心转换过程，这也是您所选控制器需要实现的关键功能。',
+                sim_panel_title: '控制面板',
+                sim_btn_load: '📤 加载DXF文件',
+                sim_btn_start: '▶️ 开始任务',
+                sim_btn_stop: '⏹️ 停止任务',
+                sim_btn_clear: '🔄 清除轨迹',
+                sim_status_label: '状态: ',
+                sim_filename_label: '文件名: ',
+                sim_status_text_wait: '等待加载文件...',
+                sim_status_text_parsing: '正在解析路径...',
+                sim_status_text_done: '路径加载并显示完成。',
+                sim_filename_text_na: 'N/A',
+                sim_preview_title: '路径预览 (1.8m x 2.0m 工作区)',
+                summary_title: '技术要点总结与可选功能拓展',
+                summary_p1: '为了确保最终设备达到预期的性能标准，以下核心技术指标是选型过程中必须严格遵守的底线。这些指标共同决定了喷绘的精度、清晰度和效率。同时，我们也列出了一些极具价值的可选功能拓展方向。在初期设计时预留相应的软硬件接口，将为设备未来的升级和功能增强提供极大的灵活性，有效延长设备的技术生命周期并提升市场竞争力。',
+                summary_table_title: '关键性能指标 (总结表)',
+                summary_table_content_html: `<div class="flex justify-between p-3 bg-gray-50 rounded-lg"><span class="font-medium text-gray-700">重复定位精度</span><span class="font-bold text-indigo-600">≤ ±0.02mm</span></div><div class="flex justify-between p-3 bg-gray-50 rounded-lg"><span class="font-medium text-gray-700">喷阀响应时间</span><span class="font-bold text-indigo-600">≤ 10ms</span></div><div class="flex justify-between p-3 bg-gray-50 rounded-lg"><span class="font-medium text-gray-700">X/Y轴推荐速度</span><span class="font-bold text-indigo-600">≥ 300mm/s</span></div><div class="flex justify-between p-3 bg-gray-50 rounded-lg"><span class="font-medium text-gray-700">控制器兼容性</span><span class="font-bold text-indigo-600">DXF / G-code</span></div><div class="flex justify-between p-3 bg-gray-50 rounded-lg"><span class="font-medium text-gray-700">电机选型推荐</span><span class="font-bold text-indigo-600">闭环步进或伺服</span></div><div class="flex justify-between p-3 bg-gray-50 rounded-lg"><span class="font-medium text-gray-700">平台平整度</span><span class="font-bold text-indigo-600">≤ 0.05mm/m</span></div>`,
+                summary_expansion_title: '可选功能拓展 (建议预留)',
+                summary_expansion_list_html: `<li class="flex items-center p-3 bg-green-50 rounded-lg text-green-800"><span class="text-lg mr-3">👁️</span><div><p class="font-semibold">视觉识别/定位模块</p><p class="text-sm text-green-700">自动校正介质的偏移和旋转，实现精准套印。</p></div></li><li class="flex items-center p-3 bg-green-50 rounded-lg text-green-800"><span class="text-lg mr-3">↕️</span><div><p class="font-semibold">自动调高Z轴喷距功能</p><p class="text-sm text-green-700">通过激光或接触式传感器，自动适应不平整的介质表面。</p></div></li><li class="flex items-center p-3 bg-green-50 rounded-lg text-green-800"><span class="text-lg mr-3">🎨</span><div><p class="font-semibold">多喷阀联动系统</p><p class="text-sm text-green-700">支持多色喷绘或同时使用不同涂料，提升效率和应用范围。</p></div></li><li class="flex items-center p-3 bg-green-50 rounded-lg text-green-800"><span class="text-lg mr-3">🌡️</span><div><p class="font-semibold">环境传感器模块</p><p class="text-sm text-green-700">监测温度/湿度，动态调整喷绘参数以适应墨水特性变化。</p></div></li>`,
+            },
+            'en-US': {
+                page_title: 'Doctoral-Level Selection Report for 3-Axis Spraying Equipment',
+                header_title: 'Doctoral-Level Selection Report for 3-Axis Spraying Equipment',
+                header_subtitle: 'An Interactive, Data-Driven Decision Support Tool',
+                nav_overview: 'Project Overview',
+                nav_components: 'Core Component Selection',
+                nav_cost: 'Cost & BOM Analysis',
+                nav_simulation: 'Control & Simulation',
+                nav_summary: 'Technical Summary',
+                overview_title1: '1. Project Background & Goals',
+                overview_p1: 'This report provides a complete framework for core component selection and analysis for a high-precision 3-axis spraying equipment. The device is designed for automated, high-precision graphic spraying on various planar media such as leather, panels, and paper. The system must handle standard industrial file formats like DXF and ensure excellent operational stability and repeatability. Through this interactive report, engineers and decision-makers can deeply understand the technical trade-offs of each component and make optimized selections based on specific application scenarios, such as industrial production, packaging decoration, or laboratory R&D.',
+                overview_title2: '2. System Composition Modules',
+                overview_p2: 'The 3-axis spraying system is a precision system integrating mechanical, electrical, and software components. Its core consists of six major modules that work in concert to accurately translate digital designs into physical sprayed patterns. The diagram below clearly illustrates these modules and their functional roles within the system. Hover over any module to view its detailed function, helping you quickly grasp the overall system architecture.',
+                module_axis_title: 'X/Y/Z Axis Motion Modules',
+                module_axis_desc: 'The "skeleton" of the system, responsible for carrying the spray head to move precisely along a predetermined trajectory in 3D space, forming the basis for pattern drawing.',
+                module_drive_title: 'Servo/Stepper Drive System',
+                module_drive_desc: 'The "muscles" of the system, providing power to the XYZ axes and precisely controlling the speed, direction, and distance of movement according to the controller\'s commands.',
+                module_controller_title: 'Controller (Main Control)',
+                module_controller_desc: 'The "brain" of the system, responsible for receiving and parsing design files like DXF, generating motion paths (G-code), and coordinating the actions of all axes and the spray valve.',
+                module_valve_title: 'Valve Actuator',
+                module_valve_desc: 'The "paintbrush" of the system, which, upon receiving a signal from the controller, executes spraying or closing actions with extremely high speed and precision to control the release of ink or coating.',
+                module_software_title: 'Software & Interface',
+                module_software_desc: 'The "human-machine interface" of the system, allowing users to import design files, set spraying parameters, and monitor the device status, acting as the bridge between the user and the machine.',
+                module_platform_title: 'Platform & Structural Parts',
+                module_platform_desc: 'The "foundation" of the system, providing a stable, flat mounting base and work platform to ensure the relative positional accuracy and long-term stability of all moving parts.',
+                components_title: 'Core Component Selection Criteria & Trade-offs',
+                components_p1: 'Every engineering decision is about finding the optimal balance between performance, cost, and reliability. This section delves into the selection criteria for the four core components. You can use the "Performance First" and "Cost First" buttons below to dynamically switch between different selection strategies and brand recommendations. This will help you understand how different choices affect the final equipment performance and budget, enabling you to make more informed decisions.',
+                btn_performance: 'Performance First',
+                btn_cost: 'Cost First',
+                comp_axis_title: '1. X/Y/Z Axis Linear Modules',
+                comp_axis_perf_strategy: 'Strategy: Precision and Speed Above All',
+                comp_axis_perf_list_html: `<li><span class="font-medium text-gray-800">Structure:</span> Prefer <b class="text-indigo-600">Ball Screw</b> drive for unparalleled rigidity and repeatability (≤ ±0.02mm).</li><li><span class="font-medium text-gray-800">Speed:</span> X/Y axes must achieve ≥ 300mm/s for high efficiency.</li><li><span class="font-medium text-gray-800">Guide Rail Grade:</span> Use high-precision grade linear guides (e.g., HIWIN's HG/EG series).</li><li><span class="font-medium text-gray-800">Recommended Brands:</span> THK, HIWIN (High-end series), Panasonic</li>`,
+                comp_axis_cost_strategy: 'Strategy: Balance of Economy and Reliability',
+                comp_axis_cost_list_html: `<li><span class="font-medium text-gray-800">Structure:</span> For long travel (>1m), prefer <b class="text-indigo-600">Timing Belt</b> drive for significant cost advantages and speed; for short travel, economical ball screws can be used.</li><li><span class="font-medium text-gray-800">Speed:</span> Meet basic production needs, X/Y axis speed can be relaxed to 200mm/s.</li><li><span class="font-medium text-gray-800">Guide Rail Grade:</span> Use standard or economy grade linear guides.</li><li><span class="font-medium text-gray-800">Recommended Brands:</span> Reputable domestic brands, SMC, AMT</li>`,
+                comp_motor_title: '2. Motor & Driver',
+                comp_motor_perf_strategy: 'Strategy: Ultimate Response and Zero Error',
+                comp_motor_perf_list_html: `<li><span class="font-medium text-gray-800">Type:</span> Must use a <b class="text-indigo-600">Servo Motor</b> system for high dynamic response and precise positioning.</li><li><span class="font-medium text-gray-800">Control:</span> Use CANopen or EtherCAT bus control to reduce wiring and improve anti-interference and response speed.</li><li><span class="font-medium text-gray-800">Torque Matching:</span> Accurately calculate load torque and select a servo with high peak torque capability.</li><li><span class="font-medium text-gray-800">Recommended Brands:</span> Yaskawa, Panasonic, Delta (High-end series)</li>`,
+                comp_motor_cost_strategy: 'Strategy: High Cost-Performance and Anti-Step-Loss',
+                comp_motor_cost_list_html: `<li><span class="font-medium text-gray-800">Type:</span> Prefer <b class="text-indigo-600">Closed-Loop Stepper Motor</b>, much cheaper than servo but with position feedback to effectively prevent step loss.</li><li><span class="font-medium text-gray-800">Control:</span> Use traditional "Pulse + Direction" control, which is simple, reliable, and highly compatible.</li><li><span class="font-medium text-gray-800">Torque Matching:</span> Select appropriate motor size and gear ratio while meeting torque requirements.</li><li><span class="font-medium text-gray-800">Recommended Brands:</span> Leadshine, Oriental Motor, MOONS'</li>`,
+                comp_valve_title: '3. Valve System',
+                comp_valve_perf_strategy: 'Strategy: Microsecond Response and Ultra-Fine Jetting',
+                comp_valve_perf_list_html: `<li><span class="font-medium text-gray-800">Drive Method:</span> Prefer <b class="text-indigo-600">Piezoelectric Valve</b>, with response speeds in microseconds for ultra-high frequency jetting.</li><li><span class="font-medium text-gray-800">Response Speed:</span> ≤ 2ms, ensuring crisp start and end points for lines during high-speed fly-spraying.</li><li><span class="font-medium text-gray-800">Nozzle Diameter:</span> Option for micro-diameters (0.1mm-0.2mm) for fine patterns.</li><li><span class="font-medium text-gray-800">Recommended Brands:</span> Nordson, Musashi</li>`,
+                comp_valve_cost_strategy: 'Strategy: Reliable, Durable, and Fast Switching',
+                comp_valve_cost_list_html: `<li><span class="font-medium text-gray-800">Drive Method:</span> Use <b class="text-indigo-600">Solenoid Valve</b> control, which is mature, inexpensive, and easy to maintain.</li><li><span class="font-medium text-gray-800">Response Speed:</span> Meeting ≤ 10ms is sufficient for most application scenarios.</li><li><span class="font-medium text-gray-800">Nozzle Diameter:</span> Choose common diameters (0.2mm–0.5mm) for good versatility.</li><li><span class="font-medium text-gray-800">Recommended Brands:</span> Techcon, Camalot, Reliable domestic brands</li>`,
+                comp_controller_title: '4. Main Control & Path Generation',
+                comp_controller_perf_strategy: 'Strategy: Powerful Computing and High Scalability',
+                comp_controller_perf_list_html: `<li><span class="font-medium text-gray-800">Platform:</span> Use a PC-based industrial control platform, such as <b class="text-indigo-600">Beckhoff (TwinCAT)</b>, or a professional motion controller.</li><li><span class="font-medium text-gray-800">Motion Control:</span> Supports advanced functions like multi-axis high-speed interpolation and look-ahead processing.</li><li><span class="font-medium text-gray-800">Scalability:</span> Reserve bus interfaces like EtherCAT for easy integration of advanced modules like vision and multi-valve systems.</li><li><span class="font-medium text-gray-800">Recommended Brands:</span> Beckhoff, Syntec, Googoltech</li>`,
+                comp_controller_cost_strategy: 'Strategy: Open-Source, Sufficient, and Community-Supported',
+                comp_controller_cost_list_html: `<li><span class="font-medium text-gray-800">Platform:</span> Use open-source solutions like <b class="text-indigo-600">Arduino + GRBL</b>, or more integrated options like the <b class="text-indigo-600">Openbuilds BlackBox</b>.</li><li><span class="font-medium text-gray-800">Software Compatibility:</span> The community offers plenty of free host software that supports DXF import and G-code generation.</li><li><span class="font-medium text-gray-800">Scalability:</span> Basic I/O ports can be used for simple expansions, but complex functions require custom development.</li><li><span class="font-medium text-gray-800">Recommended Platforms:</span> Openbuilds, GRBL-based controllers</li>`,
+                cost_title: 'Cost Composition & Experimental BOM',
+                cost_p1: 'Cost is a key factor in project success. The chart below visually compares the relative cost composition of two different configurations ("Cost-Leading Experimental Rig" vs. "High-Performance Industrial Machine"). As seen, the drive system (servo vs. stepper) and motion modules are the main sources of cost difference. Understanding these differences helps with reasonable budget planning in the early stages of a project. Below the chart is a detailed BOM for a cost-leading experimental rig with a 1.8m x 2.0m motion range, which can serve as a reference for building your prototype.',
+                cost_chart_title: 'Relative Cost Composition Analysis of Different Configurations',
+                cost_chart_dataset1_label: 'Cost-Leading Experimental Rig',
+                cost_chart_dataset2_label: 'High-Performance Industrial Machine',
+                cost_chart_y_axis_label: 'Relative Cost Index (Not specific amounts)',
+                cost_bom_title: 'Bill of Materials for Cost-Leading Experimental Rig (1.8m x 2.0m)',
+                bom_th1: 'Category',
+                bom_th2: 'Selection',
+                bom_th3: 'Specification/Model',
+                bom_th4: 'Notes',
+                bom_tbody_html: `<tr><td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Frame Structure</td><td class="px-6 py-4 whitespace-nowrap text-gray-700">European Standard Aluminum Profile</td><td class="px-6 py-4 whitespace-nowrap text-gray-700">4080 Heavy / 4040</td><td class="px-6 py-4 whitespace-nowrap text-gray-500">Good rigidity, easy to build and expand</td></tr><tr><td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">X/Y Axis Module</td><td class="px-6 py-4 whitespace-nowrap text-gray-700">Timing Belt + Linear Shaft/Guide</td><td class="px-6 py-4 whitespace-nowrap text-gray-700">GT2/HTD 3M Belt, SBR20 Shaft or MGN15 Guide</td><td class="px-6 py-4 whitespace-nowrap text-gray-500">Most cost-effective solution for long travel</td></tr><tr><td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Z Axis Module</td><td class="px-6 py-4 whitespace-nowrap text-gray-700">T8 Lead Screw Module</td><td class="px-6 py-4 whitespace-nowrap text-gray-700">100mm travel, 4mm lead</td><td class="px-6 py-4 whitespace-nowrap text-gray-500">Self-locking ability prevents spray head from dropping</td></tr><tr><td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Motor Drive</td><td class="px-6 py-4 whitespace-nowrap text-gray-700">Closed-Loop Stepper Motor Kit</td><td class="px-6 py-4 whitespace-nowrap text-gray-700">NEMA 23 (X/Y), NEMA 17 (Z)</td><td class="px-6 py-4 whitespace-nowrap text-gray-500">Best balance of cost and performance</td></tr><tr><td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Controller</td><td class="px-6 py-4 whitespace-nowrap text-gray-700">Integrated GRBL Controller</td><td class="px-6 py-4 whitespace-nowrap text-gray-700">Openbuilds BlackBox / MKS DLC32</td><td class="px-6 py-4 whitespace-nowrap text-gray-500">Integrated drivers, simple wiring, mature community</td></tr><tr><td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Valve System</td><td class="px-6 py-4 whitespace-nowrap text-gray-700">Basic Solenoid Valve/Airbrush</td><td class="px-6 py-4 whitespace-nowrap text-gray-700">12V/24V Solenoid + Relay Module</td><td class="px-6 py-4 whitespace-nowrap text-gray-500">For functional verification, very low cost</td></tr><tr><td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Power Supply</td><td class="px-6 py-4 whitespace-nowrap text-gray-700">Switching Power Supply</td><td class="px-6 py-4 whitespace-nowrap text-gray-700">24V 350W</td><td class="px-6 py-4 whitespace-nowrap text-gray-500">Powers all motors and controller</td></tr>`,
+                sim_title: 'Control Interface & Path Simulation',
+                sim_p1: 'Theory must eventually be put into practice. This section provides a simplified control interface simulator to help you intuitively understand the device\'s workflow. You can click the "Load DXF File" button to simulate importing a design (a preset example is used here), and you will see the system\'s parsed motion path on the canvas below. While this is a conceptual demonstration, it clearly shows the core conversion process from a digital file to physical motion, which is a key function your chosen controller needs to implement.',
+                sim_panel_title: 'Control Panel',
+                sim_btn_load: '📤 Load DXF File',
+                sim_btn_start: '▶️ Start Task',
+                sim_btn_stop: '⏹️ Stop Task',
+                sim_btn_clear: '🔄 Clear Path',
+                sim_status_label: 'Status: ',
+                sim_filename_label: 'Filename: ',
+                sim_status_text_wait: 'Waiting for file...',
+                sim_status_text_parsing: 'Parsing path...',
+                sim_status_text_done: 'Path loaded and displayed.',
+                sim_filename_text_na: 'N/A',
+                sim_preview_title: 'Path Preview (1.8m x 2.0m Workspace)',
+                summary_title: 'Technical Summary & Optional Expansions',
+                summary_p1: 'To ensure the final equipment meets the expected performance standards, the following core technical specifications are the bottom line that must be strictly adhered to during selection. These specifications jointly determine the precision, clarity, and efficiency of the spraying. We also list some valuable optional expansion directions. Reserving the corresponding hardware and software interfaces during the initial design will provide great flexibility for future upgrades and functional enhancements, effectively extending the device\'s technical lifecycle and enhancing its market competitiveness.',
+                summary_table_title: 'Key Performance Indicators (Summary Table)',
+                summary_table_content_html: `<div class="flex justify-between p-3 bg-gray-50 rounded-lg"><span class="font-medium text-gray-700">Repeatability</span><span class="font-bold text-indigo-600">≤ ±0.02mm</span></div><div class="flex justify-between p-3 bg-gray-50 rounded-lg"><span class="font-medium text-gray-700">Valve Response Time</span><span class="font-bold text-indigo-600">≤ 10ms</span></div><div class="flex justify-between p-3 bg-gray-50 rounded-lg"><span class="font-medium text-gray-700">X/Y Axis Rec. Speed</span><span class="font-bold text-indigo-600">≥ 300mm/s</span></div><div class="flex justify-between p-3 bg-gray-50 rounded-lg"><span class="font-medium text-gray-700">Controller Compatibility</span><span class="font-bold text-indigo-600">DXF / G-code</span></div><div class="flex justify-between p-3 bg-gray-50 rounded-lg"><span class="font-medium text-gray-700">Motor Recommendation</span><span class="font-bold text-indigo-600">Closed-Loop Stepper or Servo</span></div><div class="flex justify-between p-3 bg-gray-50 rounded-lg"><span class="font-medium text-gray-700">Platform Flatness</span><span class="font-bold text-indigo-600">≤ 0.05mm/m</span></div>`,
+                summary_expansion_title: 'Optional Expansions (Reservation Recommended)',
+                summary_expansion_list_html: `<li class="flex items-center p-3 bg-green-50 rounded-lg text-green-800"><span class="text-lg mr-3">👁️</span><div><p class="font-semibold">Vision Recognition/Positioning Module</p><p class="text-sm text-green-700">Automatically corrects media offset and rotation for precise registration.</p></div></li><li class="flex items-center p-3 bg-green-50 rounded-lg text-green-800"><span class="text-lg mr-3">↕️</span><div><p class="font-semibold">Automatic Z-Axis Height Adjustment</p><p class="text-sm text-green-700">Automatically adapts to uneven media surfaces using laser or contact sensors.</p></div></li><li class="flex items-center p-3 bg-green-50 rounded-lg text-green-800"><span class="text-lg mr-3">🎨</span><div><p class="font-semibold">Multi-Valve联动系统</p><p class="text-sm text-green-700">Supports multi-color spraying or simultaneous use of different coatings to improve efficiency and application range.</p></div></li><li class="flex items-center p-3 bg-green-50 rounded-lg text-green-800"><span class="text-lg mr-3">🌡️</span><div><p class="font-semibold">Environmental Sensor Module</p><p class="text-sm text-green-700">Monitors temperature/humidity to dynamically adjust spray parameters for ink characteristics.</p></div></li>`,
+            }
+        };
+
+        let currentLang = 'zh-CN';
+        let costChart;
+
         const navButtons = document.querySelectorAll('.nav-button');
         const contentSections = document.querySelectorAll('.content-section');
         const componentDetails = document.querySelectorAll('.component-details');
         const perfBtn = document.getElementById('perf-btn');
         const costBtn = document.getElementById('cost-btn');
+        const langZhBtn = document.getElementById('lang-zh');
+        const langEnBtn = document.getElementById('lang-en');
 
         function switchTab(tabId) {
             navButtons.forEach(button => {
@@ -498,33 +694,45 @@
             }
         }
 
-        const costCtx = document.getElementById('costChart');
-        if (costCtx) {
-            new Chart(costCtx, {
+        function renderCostChart(lang) {
+            const ctx = document.getElementById('costChart');
+            if (!ctx) return;
+
+            if (costChart) {
+                costChart.destroy();
+            }
+
+            const chartData = {
+                labels: ['运动模组', '驱动系统', '控制系统', '喷阀系统', '结构与其它'],
+                datasets: [{
+                    label: translations[lang].cost_chart_dataset1_label,
+                    data: [25, 20, 10, 5, 40],
+                    backgroundColor: 'rgba(79, 70, 229, 0.7)',
+                    borderColor: 'rgba(79, 70, 229, 1)',
+                    borderWidth: 1
+                }, {
+                    label: translations[lang].cost_chart_dataset2_label,
+                    data: [50, 60, 40, 30, 50],
+                    backgroundColor: 'rgba(220, 38, 38, 0.7)',
+                    borderColor: 'rgba(220, 38, 38, 1)',
+                    borderWidth: 1
+                }]
+            };
+
+            if (lang === 'en-US') {
+                chartData.labels = ['Motion Modules', 'Drive System', 'Control System', 'Valve System', 'Structure & Others'];
+            }
+
+            costChart = new Chart(ctx, {
                 type: 'bar',
-                data: {
-                    labels: ['运动模组', '驱动系统', '控制系统', '喷阀系统', '结构与其它'],
-                    datasets: [{
-                        label: '成本领先 实验设备',
-                        data: [25, 20, 10, 5, 40],
-                        backgroundColor: 'rgba(79, 70, 229, 0.7)',
-                        borderColor: 'rgba(79, 70, 229, 1)',
-                        borderWidth: 1
-                    }, {
-                        label: '高性能 工业设备',
-                        data: [50, 60, 40, 30, 50],
-                        backgroundColor: 'rgba(220, 38, 38, 0.7)',
-                        borderColor: 'rgba(220, 38, 38, 1)',
-                        borderWidth: 1
-                    }]
-                },
+                data: chartData,
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
                         title: {
                             display: true,
-                            text: '不同配置方案的相对成本构成分析',
+                            text: translations[lang].cost_chart_title,
                             font: { size: 18 }
                         },
                         tooltip: {
@@ -535,7 +743,7 @@
                                         label += ': ';
                                     }
                                     if (context.parsed.y !== null) {
-                                        label += '相对成本指数 ' + context.parsed.y;
+                                        label += context.parsed.y;
                                     }
                                     return label;
                                 }
@@ -547,12 +755,61 @@
                             beginAtZero: true,
                             title: {
                                 display: true,
-                                text: '相对成本指数 (非具体金额)'
+                                text: translations[lang].cost_chart_y_axis_label
                             }
                         }
                     }
                 }
             });
+        }
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.documentElement.lang = lang.split('-')[0];
+            document.body.className = lang === 'en-US' ? 'antialiased en' : 'antialiased';
+
+            document.querySelectorAll('[data-translate-key]').forEach(el => {
+                const key = el.dataset.translateKey;
+                const translation = translations[lang][key];
+                if (key.endsWith('_html')) {
+                    el.innerHTML = translation;
+                } else if (translation) {
+                    el.textContent = translation;
+                }
+            });
+
+            // Handle complex HTML content separately
+            document.querySelector('[data-translate-key="comp_axis_perf_list"]').innerHTML = translations[lang].comp_axis_perf_list_html;
+            document.querySelector('[data-translate-key="comp_axis_cost_list"]').innerHTML = translations[lang].comp_axis_cost_list_html;
+            document.querySelector('[data-translate-key="comp_motor_perf_list"]').innerHTML = translations[lang].comp_motor_perf_list_html;
+            document.querySelector('[data-translate-key="comp_motor_cost_list"]').innerHTML = translations[lang].comp_motor_cost_list_html;
+            document.querySelector('[data-translate-key="comp_valve_perf_list"]').innerHTML = translations[lang].comp_valve_perf_list_html;
+            document.querySelector('[data-translate-key="comp_valve_cost_list"]').innerHTML = translations[lang].comp_valve_cost_list_html;
+            document.querySelector('[data-translate-key="comp_controller_perf_list"]').innerHTML = translations[lang].comp_controller_perf_list_html;
+            document.querySelector('[data-translate-key="comp_controller_cost_list"]').innerHTML = translations[lang].comp_controller_cost_list_html;
+            document.querySelector('[data-translate-key="bom_tbody"]').innerHTML = translations[lang].bom_tbody_html;
+            document.querySelector('[data-translate-key="summary_table_content"]').innerHTML = translations[lang].summary_table_content_html;
+            document.querySelector('[data-translate-key="summary_expansion_list"]').innerHTML = translations[lang].summary_expansion_list_html;
+            
+            // Update simulation status text
+            document.getElementById('sim-status').textContent = translations[lang].sim_status_text_wait;
+            document.getElementById('sim-filename').textContent = translations[lang].sim_filename_text_na;
+
+
+            document.title = translations[lang].page_title;
+
+            if (lang === 'zh-CN') {
+                langZhBtn.classList.add('active');
+                langZhBtn.classList.remove('inactive');
+                langEnBtn.classList.add('inactive');
+                langEnBtn.classList.remove('active');
+            } else {
+                langEnBtn.classList.add('active');
+                langEnBtn.classList.remove('inactive');
+                langZhBtn.classList.add('inactive');
+                langZhBtn.classList.remove('active');
+            }
+            renderCostChart(lang);
         }
         
         const fileInput = document.getElementById('dxf-upload');
@@ -599,7 +856,7 @@
             ctx.quadraticCurveTo(w * 0.5, h * 0.3, w * 0.8, h * 0.8);
             ctx.stroke();
             
-            statusEl.textContent = '路径加载并显示完成。';
+            statusEl.textContent = translations[currentLang].sim_status_text_done;
         }
 
         if (fileInput) {
@@ -607,7 +864,7 @@
                 const file = event.target.files[0];
                 if (file) {
                     filenameEl.textContent = file.name;
-                    statusEl.textContent = '正在解析路径...';
+                    statusEl.textContent = translations[currentLang].sim_status_text_parsing;
                     setTimeout(drawMockPath, 500);
                 }
             });
@@ -617,13 +874,19 @@
             clearBtn.addEventListener('click', () => {
                 if(ctx) {
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    statusEl.textContent = '等待加载文件...';
-                    filenameEl.textContent = 'N/A';
+                    statusEl.textContent = translations[currentLang].sim_status_text_wait;
+                    filenameEl.textContent = translations[currentLang].sim_filename_text_na;
                     fileInput.value = '';
                 }
             });
         }
 
+        // Initial load
+        window.onload = () => {
+            setLanguage('zh-CN');
+        };
+
     </script>
 </body>
 </html>
+ 
