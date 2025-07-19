@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -10,14 +10,14 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <!-- Chosen Palette: Warm Neutral & Deep Indigo -->
-    <!-- Application Structure Plan: The application is structured into five distinct, navigable sections (Overview, Components, Cost Analysis, Control Simulation, Summary) using a top navigation bar. This tabbed approach transforms the linear document into a multi-faceted, user-driven tool. It allows users to directly access the information most relevant to them—be it high-level concepts, detailed component trade-offs, budget implications, or operational simulation. This non-linear structure is superior for usability as it caters to different user goals (e.g., an engineer comparing specs vs. a manager assessing costs) without forcing a sequential read-through. -->
+    <!-- Application Structure Plan: The application is structured into five distinct, navigable sections (Overview, Components, Cost Analysis, Control Simulation, Summary) using a top navigation bar for desktop and a fixed bottom navigation bar for mobile. This dual approach optimizes the user experience for each form factor, ensuring intuitive access to information. The tabbed content model transforms the linear document into a multi-faceted, user-driven tool, catering to different user goals (e.g., an engineer comparing specs vs. a manager assessing costs). -->
     <!-- Visualization & Content Choices: 
         1. System Composition -> Goal: Organize/Inform -> Viz: Interactive diagram using HTML/CSS Flexbox -> Interaction: Hover to reveal details -> Justification: More engaging and spatially intuitive than a simple table. Method: HTML/Tailwind.
-        2. Component Selection -> Goal: Compare/Inform -> Viz: Tabbed content cards for each component -> Interaction: Buttons to toggle between 'Performance' and 'Economy' views, dynamically changing text and recommendations -> Justification: Allows direct comparison of trade-offs (cost vs. performance) which is a core task for engineers. Method: JS DOM manipulation.
-        3. Cost Analysis -> Goal: Compare/Analyze -> Viz: Bar Chart -> Interaction: Tooltips on hover, visual comparison of budget vs. performance configurations -> Justification: A bar chart provides an immediate, powerful visual summary of relative costs, far more effective than text alone. Library: Chart.js (Canvas).
-        4. Experimental BOM -> Goal: Inform/Organize -> Viz: HTML Table -> Interaction: Horizontally scrollable on mobile -> Justification: A table is the standard, most effective way to present a Bill of Materials, and scrolling preserves its structure on small screens. Method: HTML/Tailwind.
-        5. Control Simulation -> Goal: Demonstrate/Interact -> Viz: Mock UI with Canvas element -> Interaction: File input to 'load' DXF, which triggers a drawing on the canvas -> Justification: Provides a tangible feel for the system's end-use and fulfills a user request, making the abstract concept of 'DXF input' concrete. Method: HTML Canvas API.
-        6. Summary -> Goal: Inform -> Viz: Key-value list -> Interaction: Static -> Justification: Simple, scannable format for quick review of critical specs. Method: HTML/Tailwind.
+        2. Component Selection -> Goal: Compare/Inform -> Viz: Tabbed content cards for each component -> Interaction: Buttons to toggle between 'Performance' and 'Economy' views -> Justification: Allows direct comparison of trade-offs (cost vs. performance), a core task for engineers. Method: JS DOM manipulation.
+        3. Cost Analysis -> Goal: Compare/Analyze -> Viz: Bar Chart -> Interaction: Tooltips on hover -> Justification: A bar chart provides an immediate, powerful visual summary of relative costs. Library: Chart.js (Canvas).
+        4. Experimental BOM -> Goal: Inform/Organize -> Viz: HTML Table -> Interaction: Horizontally scrollable on mobile -> Justification: A table is the standard, most effective way to present a Bill of Materials. Method: HTML/Tailwind.
+        5. Control Simulation -> Goal: Demonstrate/Interact -> Viz: Mock UI with Canvas element -> Interaction: File input to 'load' DXF, which triggers a drawing -> Justification: Provides a tangible feel for the system's end-use. Method: HTML Canvas API.
+        6. Summary -> Goal: Inform -> Viz: Key-value list -> Interaction: Static -> Justification: Simple, scannable format for quick review. Method: HTML/Tailwind.
     -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
@@ -40,14 +40,6 @@
         .nav-button:hover {
             color: #4f46e5; /* Indigo-500 for hover */
             border-bottom-color: #4f46e5;
-        }
-        .mobile-nav-button {
-            transition: background-color 0.2s ease-in-out;
-        }
-        .mobile-nav-button.active {
-            background-color: #e0e7ff;
-            color: #3c366b;
-            font-weight: 600;
         }
         .content-section {
             display: none;
@@ -138,15 +130,25 @@
             background-color: transparent;
             color: #4b5563;
         }
-        /* Bottom Sheet Styles */
-        #mobile-nav-container.hidden {
-            display: none;
+        /* Bottom Navigation Bar Styles */
+        .bottom-nav-button {
+            color: #6b7280; /* gray-500 */
+            transition: all 0.2s ease-in-out;
         }
-        #mobile-nav-overlay {
-            transition: opacity 0.3s ease-in-out;
+        .bottom-nav-button.active {
+            color: #3c366b; /* Deep Indigo */
         }
-        #mobile-nav-sheet {
-            transition: transform 0.3s ease-in-out;
+        .bottom-nav-button span:first-child {
+            font-size: 1.25rem; /* Larger icon */
+            margin-bottom: 0.125rem;
+        }
+        main {
+            padding-bottom: 80px; /* Space for bottom nav */
+        }
+        @media (min-width: 768px) {
+            main {
+                padding-bottom: 0;
+            }
         }
     </style>
 </head>
@@ -156,12 +158,10 @@
 
         <header class="relative text-center mb-4 sm:mb-8">
             <div class="flex justify-between items-center">
-                 <div class="md:hidden">
-                    <button id="menu-btn" class="p-2 rounded-md text-gray-600 hover:bg-gray-200">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
-                    </button>
+                 <div class="w-10 md:hidden">
+                    <!-- Placeholder for alignment -->
                 </div>
-                <div class="flex-1 text-center md:text-center">
+                <div class="flex-1 text-center">
                      <h1 class="text-2xl sm:text-4xl font-bold text-gray-800" data-translate-key="header_title">三轴喷绘设备博士级选型报告</h1>
                      <p class="hidden sm:block mt-2 text-lg text-gray-600" data-translate-key="header_subtitle">一份交互式、数据驱动的决策支持工具</p>
                 </div>
@@ -181,23 +181,6 @@
                 <button class="nav-button py-4 px-2 text-sm sm:text-base font-medium text-gray-700" onclick="switchTab('summary')" data-translate-key="nav_summary">技术要点</button>
             </div>
         </nav>
-        
-        <div id="mobile-nav-container" class="hidden md:hidden fixed inset-0 z-40">
-            <!-- Overlay -->
-            <div id="mobile-nav-overlay" class="fixed inset-0 bg-black bg-opacity-50 opacity-0"></div>
-            <!-- Bottom Sheet -->
-            <div id="mobile-nav-sheet" class="fixed bottom-0 left-0 right-0 bg-white rounded-t-2xl shadow-lg p-4 transform translate-y-full">
-                <div class="mx-auto w-12 h-1.5 bg-gray-300 rounded-full mb-4"></div>
-                <h3 class="text-lg font-bold mb-4 text-center" data-translate-key="nav_menu_title">菜单</h3>
-                <div class="flex flex-col space-y-2">
-                    <button class="mobile-nav-button active w-full text-left p-3 rounded-lg text-lg" onclick="switchTab('overview'); closeMenu();" data-translate-key="nav_overview">项目概览</button>
-                    <button class="mobile-nav-button w-full text-left p-3 rounded-lg text-lg" onclick="switchTab('components'); closeMenu();" data-translate-key="nav_components">核心部件选型</button>
-                    <button class="mobile-nav-button w-full text-left p-3 rounded-lg text-lg" onclick="switchTab('cost'); closeMenu();" data-translate-key="nav_cost">成本与BOM分析</button>
-                    <button class="mobile-nav-button w-full text-left p-3 rounded-lg text-lg" onclick="switchTab('simulation'); closeMenu();" data-translate-key="nav_simulation">控制与仿真</button>
-                    <button class="mobile-nav-button w-full text-left p-3 rounded-lg text-lg" onclick="switchTab('summary'); closeMenu();" data-translate-key="nav_summary">技术要点</button>
-                </div>
-            </div>
-        </div>
 
         <main>
             <div id="overview" class="content-section active">
@@ -401,6 +384,32 @@
         </main>
     </div>
 
+    <!-- Bottom Navigation Bar for Mobile -->
+    <nav id="bottom-nav" class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-[0_-2px_10px_rgba(0,0,0,0.05)] z-20">
+        <div class="flex justify-around">
+            <button class="bottom-nav-button active flex-1 flex flex-col items-center justify-center py-2 px-1 text-xs" onclick="switchTab('overview')">
+                <span>📊</span>
+                <span data-translate-key="nav_overview">项目概览</span>
+            </button>
+            <button class="bottom-nav-button flex-1 flex flex-col items-center justify-center py-2 px-1 text-xs" onclick="switchTab('components')">
+                <span>⚙️</span>
+                <span data-translate-key="nav_components">核心部件选型</span>
+            </button>
+            <button class="bottom-nav-button flex-1 flex flex-col items-center justify-center py-2 px-1 text-xs" onclick="switchTab('cost')">
+                <span>💰</span>
+                <span data-translate-key="nav_cost">成本与BOM分析</span>
+            </button>
+            <button class="bottom-nav-button flex-1 flex flex-col items-center justify-center py-2 px-1 text-xs" onclick="switchTab('simulation')">
+                <span>🕹️</span>
+                <span data-translate-key="nav_simulation">控制与仿真</span>
+            </button>
+            <button class="bottom-nav-button flex-1 flex flex-col items-center justify-center py-2 px-1 text-xs" onclick="switchTab('summary')">
+                <span>📝</span>
+                <span data-translate-key="nav_summary">技术要点</span>
+            </button>
+        </div>
+    </nav>
+
     <script>
         const translations = {
             'zh-CN': {
@@ -575,7 +584,7 @@
         let costChart;
 
         const navButtons = document.querySelectorAll('.nav-button');
-        const mobileNavButtons = document.querySelectorAll('.mobile-nav-button');
+        const bottomNavButtons = document.querySelectorAll('.bottom-nav-button');
         const contentSections = document.querySelectorAll('.content-section');
         const componentDetails = document.querySelectorAll('.component-details');
         const perfBtn = document.getElementById('perf-btn');
@@ -583,34 +592,8 @@
         const langZhBtn = document.getElementById('lang-zh');
         const langEnBtn = document.getElementById('lang-en');
         
-        const menuBtn = document.getElementById('menu-btn');
-        const mobileNavContainer = document.getElementById('mobile-nav-container');
-        const mobileNavOverlay = document.getElementById('mobile-nav-overlay');
-        const mobileNavSheet = document.getElementById('mobile-nav-sheet');
-
-        function openMenu() {
-            mobileNavContainer.classList.remove('hidden');
-            // Use requestAnimationFrame to ensure the styles are applied after 'display' changes
-            requestAnimationFrame(() => {
-                mobileNavOverlay.classList.remove('opacity-0');
-                mobileNavSheet.classList.remove('translate-y-full');
-            });
-        }
-
-        function closeMenu() {
-            mobileNavOverlay.classList.add('opacity-0');
-            mobileNavSheet.classList.add('translate-y-full');
-            // Wait for the transition to finish before hiding the container
-            setTimeout(() => {
-                mobileNavContainer.classList.add('hidden');
-            }, 300); // Must match transition duration
-        }
-
-        menuBtn.addEventListener('click', openMenu);
-        mobileNavOverlay.addEventListener('click', closeMenu);
-
         function switchTab(tabId) {
-            const allNavButtons = [...navButtons, ...mobileNavButtons];
+            const allNavButtons = [...navButtons, ...bottomNavButtons];
             allNavButtons.forEach(button => {
                 button.classList.remove('active');
                 if (button.getAttribute('onclick').includes(tabId)) {
@@ -623,6 +606,7 @@
                     section.classList.add('active');
                 }
             });
+             window.scrollTo(0, 0);
         }
         
         function switchComponentView(viewType) {
